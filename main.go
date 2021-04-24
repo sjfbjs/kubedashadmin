@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"gin-vue/models"
 	"net/http"
 
 	"gin-vue/pkg/setting"
@@ -20,6 +19,6 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	//延迟关闭数据库
-	models.CloseDB()
+	//models.CloseDB()
 	_ = s.ListenAndServe()
 }

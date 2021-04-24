@@ -1,35 +1,39 @@
 package v1
 
 import (
-	"gin-vue/models"
+	"context"
+	"fmt"
+	"gin-vue/config"
+	_ "gin-vue/models"
 	"gin-vue/pkg/e"
-	"gin-vue/pkg/setting"
-	"gin-vue/pkg/util"
-	"net/http"
-
+	_ "gin-vue/pkg/setting"
+	_ "gin-vue/pkg/util"
 	"github.com/gin-gonic/gin"
-	"github.com/unknwon/com"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"net/http"
 )
 
 //获取指定命名空间下的pod
 func GetPods(c *gin.Context) {
 	namespace := c.Query("namespace")
-	maps := make(map[string]interface{})
+	if namespace == "" {
+		namespace = "default"
+	}
+	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
-	if namespace != "" {
-		maps["name"] = namespace
-	}
-
-	var state int = -1
-	if arg := c.Query("state"); arg != "" {
-		state = com.StrTo(arg).MustInt()
-		maps["state"] = state
-	}
 	code := e.SUCCESS
-
-	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
-	data["total"] = models.GetTagTotal(maps)
-
+	ctx := context.Background()
+	list, err := config.KubeClient.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	data["lists"] = list
+	if list == nil {
+		fmt.Println("list 为空")
+		data["total"] = 0
+	} else {
+		data["total"] = len(list.Items)
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
@@ -37,7 +41,3 @@ func GetPods(c *gin.Context) {
 	})
 
 }
-
-
-
-
