@@ -9,9 +9,15 @@ import (
 	_ "gin-vue/pkg/setting"
 	_ "gin-vue/pkg/util"
 	"github.com/gin-gonic/gin"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net/http"
 )
+
+type MyPod struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}
 
 //获取指定命名空间下的pod
 func GetPods(c *gin.Context) {
@@ -28,7 +34,21 @@ func GetPods(c *gin.Context) {
 		fmt.Println(err.Error())
 		code = e.ERROR
 	}
-	data["lists"] = list
+
+	//var podList []*v1.Pod
+	var podList []v1.Pod
+	podList = list.Items
+	var myPodList []MyPod
+
+	for _, podInfo := range podList {
+		myPod := MyPod{}
+		myPod.Name = podInfo.Name
+		myPod.Status = podInfo.Status.String()
+		myPodList = append(myPodList, myPod)
+	}
+	//fmt.Println(list.Items,"\n")
+
+	data["lists"] = myPodList
 	if list == nil {
 		fmt.Println("list 为空")
 		data["total"] = 0
