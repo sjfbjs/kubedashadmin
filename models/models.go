@@ -11,6 +11,7 @@ import (
 	"gin-vue/pkg/setting"
 )
 
+//全局变量
 var db *gorm.DB
 
 type Model struct {

@@ -20,13 +20,13 @@ type Article struct {
 }
 
 func (tag *Article) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
+	_ = scope.SetColumn("CreatedOn", time.Now().Unix())
 
 	return nil
 }
 
 func (tag *Article) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
+	_ = scope.SetColumn("ModifiedOn", time.Now().Unix())
 
 	return nil
 }
