@@ -1,0 +1,18 @@
+.DS_Store
+vue-admin/node_modules/
+vue-admin/dist/
+vue-admin/npm-debug.log*
+vue-admin/yarn-debug.log*
+vue-admin/yarn-error.log*
+vue-admin/package-lock.json
+vue-admin/tests/**/coverage/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.exe
+

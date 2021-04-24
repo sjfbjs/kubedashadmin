@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "axios": "0.18.1",
+    "body-parser": "^1.19.0",
+    "chokidar": "^3.5.1",
     "element-ui": "2.7.2",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
