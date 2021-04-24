@@ -43,7 +43,7 @@ func GetPods(c *gin.Context) {
 	for _, podInfo := range podList {
 		myPod := MyPod{}
 		myPod.Name = podInfo.Name
-		myPod.Status = podInfo.Status.String()
+		myPod.Status = string(podInfo.Status.Phase)
 		myPodList = append(myPodList, myPod)
 	}
 	//fmt.Println(list.Items,"\n")
