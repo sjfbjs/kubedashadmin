@@ -26,6 +26,7 @@ func GetPods(c *gin.Context) {
 	list, err := config.KubeClient.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
+		code = e.ERROR
 	}
 	data["lists"] = list
 	if list == nil {
