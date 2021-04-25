@@ -40,24 +40,29 @@ func GetPodsByNS(c *gin.Context) {
 
 	//var podList []*v1.Pod
 	var podList []v1.Pod
-	podList = list.Items
-	var myPodList []MyPod
-
-	for _, podInfo := range podList {
-		myPod := MyPod{}
-		myPod.Name = podInfo.Name
-		myPod.Status = string(podInfo.Status.Phase)
-		myPodList = append(myPodList, myPod)
-	}
-	//fmt.Println(list.Items,"\n")
-
-	data["lists"] = myPodList
 	if list == nil {
 		fmt.Println("list 为空")
 		data["total"] = 0
+		data["list"] = ""
+
 	} else {
+		podList = list.Items
+		var myPodList []MyPod
+
+		for _, podInfo := range podList {
+			myPod := MyPod{}
+			myPod.Name = podInfo.Name
+			myPod.Status = string(podInfo.Status.Phase)
+			myPodList = append(myPodList, myPod)
+		}
+		//fmt.Println(list.Items,"\n")
+
+		data["lists"] = myPodList
+
 		data["total"] = len(list.Items)
+
 	}
+
 	//格式需要修改     deploymentName:xxx count:xxx status:xxxx
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
@@ -81,24 +86,28 @@ func GetDeploymentsByNS(c *gin.Context) {
 		fmt.Println(err.Error())
 		code = e.ERROR
 	}
-	deployList := list.Items
-	//var myPodList []MyPod
-	var myDeployList []MyDeploy
-	for _, deploy := range deployList {
-		myDeply := MyDeploy{}
-		myDeply.Name = deploy.Name
-		fmt.Println(deploy.Status)
-		myDeployList = append(myDeployList, myDeply)
-	}
-	//fmt.Println(list.Items,"\n")
-
-	data["lists"] = myDeployList
 	if list == nil {
+		data["list"] = ""
 		fmt.Println("deploylist 为空")
 		data["total"] = 0
 	} else {
+		deployList := list.Items
+		//var myPodList []MyPod
+		var myDeployList []MyDeploy
+		for _, deploy := range deployList {
+			myDeply := MyDeploy{}
+			myDeply.Name = deploy.Name
+			fmt.Println(deploy.Status)
+			myDeployList = append(myDeployList, myDeply)
+		}
+		//fmt.Println(list.Items,"\n")
+
+		data["lists"] = myDeployList
+
 		data["total"] = len(list.Items)
+
 	}
+
 	//格式需要修改     deploymentName:xxx count:xxx status:xxxx
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
