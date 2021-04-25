@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"gin-vue/config"
 	_ "gin-vue/models"
@@ -72,6 +73,13 @@ func GetPodsByNS(c *gin.Context) {
 
 }
 
+type MyAnnotations struct {
+	ApiVersion string      `json:"apiVersion"`
+	Kind       string      `json:"kind"`
+	Metadata   string      `json:"metadata"`
+	Spec       interface{} `json:"spec"`
+}
+
 func GetDeploymentsByNS(c *gin.Context) {
 	namespace := c.Query("namespace")
 	if namespace == "" {
@@ -97,7 +105,24 @@ func GetDeploymentsByNS(c *gin.Context) {
 		for _, deploy := range deployList {
 			myDeply := MyDeploy{}
 			myDeply.Name = deploy.Name
-			fmt.Println(deploy.Status)
+			//fmt.Printf("%+v\n", deploy.ObjectMeta.Annotations)
+			//fmt.Println("---------------------------\n")
+			for _, v := range deploy.ObjectMeta.Annotations {
+				specinfo := make(map[string]interface{})
+				_ = json.Unmarshal([]byte(v), &specinfo)
+
+				//for _,sv := range specinfo {
+				//
+				//	tpl := make(map[string]interface{})
+				//	_ = json.Unmarshal(sv.([]byte),&tpl)
+				//	fmt.Println(sv)
+				//
+				//}
+
+				fmt.Println(specinfo)
+				//fmt.Println(v)
+				//fmt.Println(reflect.TypeOf(v))
+			}
 			myDeployList = append(myDeployList, myDeply)
 		}
 		//fmt.Println(list.Items,"\n")
