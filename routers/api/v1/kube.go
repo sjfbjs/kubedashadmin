@@ -74,13 +74,6 @@ func GetPodsByNS(c *gin.Context) {
 
 }
 
-type MyAnnotations struct {
-	ApiVersion string      `json:"apiVersion"`
-	Kind       string      `json:"kind"`
-	Metadata   string      `json:"metadata"`
-	Spec       interface{} `json:"spec"`
-}
-
 func GetDeploymentsByNS(c *gin.Context) {
 	namespace := c.Query("namespace")
 	if namespace == "" {
