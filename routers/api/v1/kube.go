@@ -55,6 +55,7 @@ func GetPods(c *gin.Context) {
 	} else {
 		data["total"] = len(list.Items)
 	}
+	//格式需要修改     deploymentName:xxx count:xxx status:xxxx
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
