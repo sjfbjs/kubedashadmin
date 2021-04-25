@@ -87,6 +87,7 @@ func GetDeploymentsByNS(c *gin.Context) {
 	for _, deploy := range deployList {
 		myDeply := MyDeploy{}
 		myDeply.Name = deploy.Name
+		fmt.Println(deploy.Status)
 		myDeployList = append(myDeployList, myDeply)
 	}
 	//fmt.Println(list.Items,"\n")
