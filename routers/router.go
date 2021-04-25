@@ -36,12 +36,6 @@ func InitRouter() *gin.Engine {
 		api.GET("/info", v1.GetUserInfo)
 		api.POST("/logout", v1.Logout)
 	}
-	kube := r.Group("/kube")
-	{
-		//获取指定命名空间下的pod
-		kube.GET("/pods/:namespace", v1.GetPods)
-		//获取指定命名空间下的deployment
-	}
 
 	var adminMiddleware = myjwt.GinJWTMiddlewareInit(&myjwt.AdminAuthorizator{})
 	apiv1 := r.Group("/api/v1")
@@ -78,6 +72,14 @@ func InitRouter() *gin.Engine {
 	{
 		//获取文章列表
 		apiv2.GET("/articles", v2.GetArticles)
+	}
+
+	kube := r.Group("/kube")
+	{
+		//获取指定命名空间下的pod
+		kube.GET("/pods/:namespace", v1.GetPodsByNS)
+		//获取指定命名空间下的deployment
+		kube.GET("/deployments/:namespace", v1.GetDeploymentsByNS)
 	}
 
 	return r
