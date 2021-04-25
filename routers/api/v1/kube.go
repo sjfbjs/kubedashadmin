@@ -20,7 +20,8 @@ type MyPod struct {
 	Status string `json:"status"`
 }
 type MyDeploy struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	Image string `json:"image"`
 }
 
 //获取指定命名空间下的pod
@@ -105,23 +106,29 @@ func GetDeploymentsByNS(c *gin.Context) {
 		for _, deploy := range deployList {
 			myDeply := MyDeploy{}
 			myDeply.Name = deploy.Name
-			//fmt.Printf("%+v\n", deploy.ObjectMeta.Annotations)
-			//fmt.Println("---------------------------\n")
-			for _, v := range deploy.ObjectMeta.Annotations {
-				specinfo := make(map[string]interface{})
-				_ = json.Unmarshal([]byte(v), &specinfo)
+			for key, v := range deploy.ObjectMeta.Annotations {
+				if key == "kubectl.kubernetes.io/last-applied-configuration" {
+					specinfo := make(map[string]map[string]map[string]interface{})
+					_ = json.Unmarshal([]byte(v), &specinfo)
+					tplspec := specinfo["spec"]
+					for speckey, sv := range tplspec {
+						if speckey == "template" {
+							for tsk, tsv := range sv {
+								if tsk == "spec" {
+									m := tsv.(map[string]interface{})
+									containers := m["containers"]
+									containerfir := containers.([]interface{})
+									contmap := containerfir[0].(map[string]interface{})
+									image := contmap["image"]
+									fmt.Println(image)
+									myDeply.Image = fmt.Sprintf("%v", image)
+								}
+							}
+						}
+					}
 
-				//for _,sv := range specinfo {
-				//
-				//	tpl := make(map[string]interface{})
-				//	_ = json.Unmarshal(sv.([]byte),&tpl)
-				//	fmt.Println(sv)
-				//
-				//}
+				}
 
-				fmt.Println(specinfo)
-				//fmt.Println(v)
-				//fmt.Println(reflect.TypeOf(v))
 			}
 			myDeployList = append(myDeployList, myDeply)
 		}
