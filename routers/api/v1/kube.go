@@ -141,3 +141,5 @@ func GetDeploymentsByNS(c *gin.Context) {
 	})
 
 }
+
+//GetPodByDeployment
