@@ -111,11 +111,15 @@ func GetDeploymentsByNS(c *gin.Context) {
 								if tsk == "spec" {
 									m := tsv.(map[string]interface{})
 									containers := m["containers"]
-									containerfir := containers.([]interface{})
-									contmap := containerfir[0].(map[string]interface{})
-									image := contmap["image"]
-									fmt.Println(image)
-									myDeply.Image = fmt.Sprintf("%v", image)
+									//类型判断和转换，后面是是否这个类型的布尔
+									containerfir, ok := containers.([]interface{})
+									if ok {
+										contmap := containerfir[0].(map[string]interface{})
+										image := contmap["image"]
+										fmt.Println(image)
+										myDeply.Image = fmt.Sprintf("%v", image)
+									}
+
 								}
 							}
 						}
