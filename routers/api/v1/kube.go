@@ -20,8 +20,9 @@ type MyPod struct {
 	Status string `json:"status"`
 }
 type MyDeploy struct {
-	Name  string `json:"name"`
-	Image string `json:"image"`
+	Name    string  `json:"name"`
+	Image   string  `json:"image"`
+	PodList []MyPod `json:"podlist"`
 }
 
 //获取指定命名空间下的pod
