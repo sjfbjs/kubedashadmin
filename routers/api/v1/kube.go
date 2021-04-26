@@ -16,8 +16,15 @@ import (
 )
 
 type MyPod struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
+	Name       string   `json:"name"`
+	NameSpace  string   `json:"namespace"`
+	Images     string   `json:"images"`
+	NodeName   string   `json:"nodename"`
+	IP         []string `jsob:"ip"`
+	Status     string   `json:"status"`
+	IsReady    bool     `json:"isready"`
+	Message    string   `json:"message"`
+	CreateTime string   `json:"createtime"`
 }
 type MyDeploy struct {
 	Name    string  `json:"name"`
