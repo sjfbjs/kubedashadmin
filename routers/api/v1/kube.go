@@ -27,10 +27,7 @@ type MyDeploy struct {
 
 //获取指定命名空间下的pod
 func GetPodsByNS(c *gin.Context) {
-	namespace := c.Query("namespace")
-	if namespace == "" {
-		namespace = "default"
-	}
+	namespace := c.DefaultQuery("namespace", "default")
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
 	code := e.SUCCESS
@@ -76,10 +73,7 @@ func GetPodsByNS(c *gin.Context) {
 }
 
 func GetDeploymentsByNS(c *gin.Context) {
-	namespace := c.Query("namespace")
-	if namespace == "" {
-		namespace = "default"
-	}
+	namespace := c.DefaultQuery("namespace", "default")
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
 	code := e.SUCCESS
