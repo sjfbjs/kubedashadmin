@@ -109,37 +109,23 @@ func GetDeploymentsByNS(c *gin.Context) {
 		for _, deploy := range deployList {
 			myDeply := MyDeploy{}
 			myDeply.Name = deploy.Name
-			for key, v := range deploy.ObjectMeta.Annotations {
-				if key == "kubectl.kubernetes.io/last-applied-configuration" {
-					specinfo := make(map[string]map[string]map[string]interface{})
-					_ = json.Unmarshal([]byte(v), &specinfo)
-					tplspec := specinfo["spec"]
-					for speckey, sv := range tplspec {
-						if speckey == "template" {
-							for tsk, tsv := range sv {
-								if tsk == "spec" {
-									m := tsv.(map[string]interface{})
-									containers := m["containers"]
-									//类型判断和转换，后面是是否这个类型的布尔
-									containerfir, ok := containers.([]interface{})
-									if ok {
-										contmap := containerfir[0].(map[string]interface{})
-										image := contmap["image"]
-										fmt.Println(image)
-										myDeply.Image = fmt.Sprintf("%v", image)
-									}
-
-								}
-							}
-						}
-					}
-
+			v := deploy.ObjectMeta.Annotations["kubectl.kubernetes.io/last-applied-configuration"]
+			//fmt.Println(v)
+			specinfo := make(map[string]map[string]map[string]interface{})
+			_ = json.Unmarshal([]byte(v), &specinfo)
+			tsv := specinfo["spec"]["template"]["spec"]
+			if tsv != nil {
+				m := tsv.(map[string]interface{})
+				fmt.Println(m)
+				containers := m["containers"]
+				containerfir, ok := containers.([]interface{})
+				if ok {
+					contmap := containerfir[0].(map[string]interface{})
+					image := contmap["image"]
+					myDeply.Image = fmt.Sprintf("%v", image)
 				}
-
+				myDeployList = append(myDeployList, myDeply)
 			}
-			myDeployList = append(myDeployList, myDeply)
-		}
-		//fmt.Println(list.Items,"\n")
 
 		data["lists"] = myDeployList
 
