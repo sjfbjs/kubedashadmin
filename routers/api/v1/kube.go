@@ -59,13 +59,12 @@ func GetPodsByNS(c *gin.Context) {
 		for _, podInfo := range podList {
 			myPod := MyPod{}
 			ipList := make([]string, 2)
-			//podIp
-			for k, v := range podInfo.Annotations {
-				if k == "cni.projectcalico.org/podIP" {
-					ipList[0] = v
-					fmt.Println(k)
-				}
-			}
+			////podIp
+			ipList[0] = podInfo.Status.PodIP
+			ipList[1] = podInfo.Status.HostIP
+			myPod.IsReady = podInfo.Status.ContainerStatuses[0].Ready
+			myPod.Images = podInfo.Status.ContainerStatuses[0].Image
+			myPod.NodeName = podInfo.Spec.NodeName
 			myPod.IP = ipList
 			myPod.Name = podInfo.Name
 			myPod.Status = string(podInfo.Status.Phase)
