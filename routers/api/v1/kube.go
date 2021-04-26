@@ -60,10 +60,11 @@ func GetPodsByNS(c *gin.Context) {
 			myPod := MyPod{}
 			ipList := make([]string, 2)
 			//podIp
-			for _, v := range podInfo.ObjectMeta.Annotations {
-				//这个IP获取还不准确
-				ipList[0] = v
-				//fmt.Println(v)
+			for k, v := range podInfo.Annotations {
+				if k == "cni.projectcalico.org/podIP" {
+					ipList[0] = v
+					fmt.Println(k)
+				}
 			}
 			myPod.IP = ipList
 			myPod.Name = podInfo.Name
