@@ -20,7 +20,7 @@ type MyPod struct {
 	NameSpace  string   `json:"namespace"`
 	Images     string   `json:"images"`
 	NodeName   string   `json:"nodename"`
-	IP         []string `jsob:"ip"`
+	IP         []string `jsob:"ip"` // [ podip , nodeip ]
 	Status     string   `json:"status"`
 	IsReady    bool     `json:"isready"`
 	Message    string   `json:"message"`
@@ -58,6 +58,14 @@ func GetPodsByNS(c *gin.Context) {
 
 		for _, podInfo := range podList {
 			myPod := MyPod{}
+			ipList := make([]string, 2)
+			//podIp
+			for _, v := range podInfo.ObjectMeta.Annotations {
+				//这个IP获取还不准确
+				ipList[0] = v
+				//fmt.Println(v)
+			}
+			myPod.IP = ipList
 			myPod.Name = podInfo.Name
 			myPod.Status = string(podInfo.Status.Phase)
 			myPod.NameSpace = namespace
