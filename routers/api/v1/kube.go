@@ -62,8 +62,6 @@ func GetPodsByNS(c *gin.Context) {
 			myPod.Status = string(podInfo.Status.Phase)
 			myPodList = append(myPodList, myPod)
 		}
-		//fmt.Println(list.Items,"\n")
-
 		data["lists"] = myPodList
 
 		data["total"] = len(list.Items)
