@@ -60,6 +60,7 @@ func GetPodsByNS(c *gin.Context) {
 			myPod := MyPod{}
 			myPod.Name = podInfo.Name
 			myPod.Status = string(podInfo.Status.Phase)
+			myPod.NameSpace = namespace
 			myPodList = append(myPodList, myPod)
 		}
 		data["lists"] = myPodList
