@@ -104,7 +104,6 @@ func GetDeploymentsByNS(c *gin.Context) {
 		data["total"] = 0
 	} else {
 		deployList := list.Items
-		//var myPodList []MyPod
 		var myDeployList []MyDeploy
 		for _, deploy := range deployList {
 			myDeply := MyDeploy{}
