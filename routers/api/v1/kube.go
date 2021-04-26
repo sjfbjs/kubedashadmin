@@ -106,17 +106,18 @@ func GetDeploymentsByNS(c *gin.Context) {
 		deployList := list.Items
 		//var myPodList []MyPod
 		var myDeployList []MyDeploy
-		for _, deploy := range deployList {
+		for kk, deploy := range deployList {
+			if kk == 0 {
+				fmt.Println(deploy)
+			}
 			myDeply := MyDeploy{}
 			myDeply.Name = deploy.Name
 			v := deploy.ObjectMeta.Annotations["kubectl.kubernetes.io/last-applied-configuration"]
-			//fmt.Println(v)
 			specinfo := make(map[string]map[string]map[string]interface{})
 			_ = json.Unmarshal([]byte(v), &specinfo)
 			tsv := specinfo["spec"]["template"]["spec"]
 			if tsv != nil {
 				m := tsv.(map[string]interface{})
-				fmt.Println(m)
 				containers := m["containers"]
 				containerfir, ok := containers.([]interface{})
 				if ok {
