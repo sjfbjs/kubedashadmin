@@ -124,13 +124,12 @@ func GetDeploymentsByNS(c *gin.Context) {
 					image := contmap["image"]
 					myDeply.Image = fmt.Sprintf("%v", image)
 				}
-				myDeployList = append(myDeployList, myDeply)
 			}
+			myDeployList = append(myDeployList, myDeply)
+			data["lists"] = myDeployList
 
-		data["lists"] = myDeployList
-
-		data["total"] = len(list.Items)
-
+			data["total"] = len(list.Items)
+		}
 	}
 
 	//格式需要修改     deploymentName:xxx count:xxx status:xxxx
