@@ -61,6 +61,7 @@ func GetPodsByNS(c *gin.Context) {
 			myPod.Name = podInfo.Name
 			myPod.Status = string(podInfo.Status.Phase)
 			myPod.NameSpace = namespace
+			myPod.CreateTime = podInfo.CreationTimestamp.String()
 			myPodList = append(myPodList, myPod)
 		}
 		data["lists"] = myPodList
