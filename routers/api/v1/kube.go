@@ -27,9 +27,9 @@ type MyPod struct {
 	CreateTime string   `json:"createtime"`
 }
 type MyDeploy struct {
-	Name    string  `json:"name"`
-	Image   string  `json:"image"`
-	PodList []MyPod `json:"podlist"`
+	Name  string `json:"name"`
+	Image string `json:"image"`
+	//PodList []MyPod `json:"podlist"`
 }
 
 //获取指定命名空间下的pod
@@ -106,10 +106,7 @@ func GetDeploymentsByNS(c *gin.Context) {
 		deployList := list.Items
 		//var myPodList []MyPod
 		var myDeployList []MyDeploy
-		for kk, deploy := range deployList {
-			if kk == 0 {
-				fmt.Println(deploy)
-			}
+		for _, deploy := range deployList {
 			myDeply := MyDeploy{}
 			myDeply.Name = deploy.Name
 			v := deploy.ObjectMeta.Annotations["kubectl.kubernetes.io/last-applied-configuration"]
@@ -128,7 +125,6 @@ func GetDeploymentsByNS(c *gin.Context) {
 			}
 			myDeployList = append(myDeployList, myDeply)
 			data["lists"] = myDeployList
-
 			data["total"] = len(list.Items)
 		}
 	}
