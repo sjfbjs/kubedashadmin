@@ -59,7 +59,7 @@ func GetPodsByNS(c *gin.Context) {
 		for _, podInfo := range podList {
 			myPod := MyPod{}
 			ipList := make([]string, 2)
-			////podIp
+			////podIp  nodeIp
 			ipList[0] = podInfo.Status.PodIP
 			ipList[1] = podInfo.Status.HostIP
 			myPod.IsReady = podInfo.Status.ContainerStatuses[0].Ready
