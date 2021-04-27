@@ -100,23 +100,23 @@ export const constantRoutes = [
     path: '/workloads',
     component: Layout,
     redirect: '/workloads',
-    name: '工作负载',
+    name: 'Workloads',
     meta: {
-      title: 'Workloads',
+      title: '工作负载',
       icon: 'workloads'
     },
     children: [
       {
         path: 'deployments',
         component: () => import('@/views/workloads/deployments/index'), // Parent router-view
-        name: '无状态',
-        meta: { title: 'Deployments' }
+        name: 'Deployments',
+        meta: { title: '无状态' }
       },
       {
         path: 'daemonsets',
         component: () => import('@/views/workloads/daemonsets/index'),
-        name: '有状态',
-        meta: { title: 'Daemonsets' }
+        name: 'Daemonsets',
+        meta: { title: '有状态' }
       }
     ]
   },
