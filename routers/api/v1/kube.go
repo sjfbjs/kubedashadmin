@@ -126,6 +126,7 @@ func GetDeploymentsByNS(c *gin.Context) {
 			}
 			podDetailMap := make(map[string]int32)
 			podDetailMap["disiredrs"] = deploy.Status.Replicas
+			//   deploy.Status.AvailableReplicas   deploy.Status.ReadyReplicas
 			podDetailMap["currentrs"] = deploy.Status.ReadyReplicas
 			myDeploy.PodDetail = podDetailMap
 			myDeployList = append(myDeployList, myDeploy)
