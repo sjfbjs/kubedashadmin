@@ -27,8 +27,9 @@ type MyPod struct {
 	CreateTime string   `json:"createtime"`
 }
 type MyDeploy struct {
-	Name  string `json:"name"`
-	Image string `json:"image"`
+	Name      string           `json:"name"`
+	Image     string           `json:"image"`
+	PodDetail map[string]int32 `json:"poddetail"`
 	//PodList []MyPod `json:"podlist"`
 }
 
@@ -106,12 +107,13 @@ func GetDeploymentsByNS(c *gin.Context) {
 		deployList := list.Items
 		var myDeployList []MyDeploy
 		for _, deploy := range deployList {
-			myDeply := MyDeploy{}
-			myDeply.Name = deploy.Name
+			myDeploy := MyDeploy{}
+			myDeploy.Name = deploy.Name
 			v := deploy.ObjectMeta.Annotations["kubectl.kubernetes.io/last-applied-configuration"]
 			specinfo := make(map[string]map[string]map[string]interface{})
 			_ = json.Unmarshal([]byte(v), &specinfo)
 			tsv := specinfo["spec"]["template"]["spec"]
+			//镜像获取逻辑可能还是有点问题，可能需要从别的地方获取
 			if tsv != nil {
 				m := tsv.(map[string]interface{})
 				containers := m["containers"]
@@ -119,10 +121,14 @@ func GetDeploymentsByNS(c *gin.Context) {
 				if ok {
 					contmap := containerfir[0].(map[string]interface{})
 					image := contmap["image"]
-					myDeply.Image = fmt.Sprintf("%v", image)
+					myDeploy.Image = fmt.Sprintf("%v", image)
 				}
 			}
-			myDeployList = append(myDeployList, myDeply)
+			podDetailMap := make(map[string]int32)
+			podDetailMap["disiredrs"] = deploy.Status.Replicas
+			podDetailMap["currentrs"] = deploy.Status.ReadyReplicas
+			myDeploy.PodDetail = podDetailMap
+			myDeployList = append(myDeployList, myDeploy)
 			data["lists"] = myDeployList
 			data["total"] = len(list.Items)
 		}
