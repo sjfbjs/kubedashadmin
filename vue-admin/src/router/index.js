@@ -97,25 +97,26 @@ export const constantRoutes = [
   },
 
   {
-    path: '/pod',
+    path: '/workloads',
     component: Layout,
-    redirect: '/pod/podlist',
-    name: 'Pod',
+    redirect: '/workloads',
+    name: '工作负载',
     meta: {
-      title: 'Pod',
-      icon: 'pod'
+      title: 'Workloads',
+      icon: 'workloads'
     },
     children: [
       {
-        path: 'podlist',
-        component: () => import('@/views/pod/podlist/index'), // Parent router-view
-        name: 'Podlist',
-        meta: { title: 'Podlist' }
+        path: 'deployments',
+        component: () => import('@/views/workloads/deployments/index'), // Parent router-view
+        name: '无状态',
+        meta: { title: 'Deployments' }
       },
       {
-        path: 'logs',
-        component: () => import('@/views/pod/logs/index'),
-        meta: { title: 'Logs' }
+        path: 'daemonsets',
+        component: () => import('@/views/workloads/daemonsets/index'),
+        name: '有状态',
+        meta: { title: 'Daemonsets' }
       }
     ]
   },
