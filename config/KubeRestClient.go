@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-//全局kubeclient
+//全局Oldkubeclient   RestKubeClient
 var KubeClient *kubernetes.Clientset
 
 func init() {
