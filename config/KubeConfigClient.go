@@ -10,7 +10,7 @@ import (
 )
 
 //全局kubeclient
-var NewKubeClient *kubernetes.Clientset
+var KubeClient *kubernetes.Clientset
 
 //noinspection ALL
 func init() {
@@ -20,12 +20,12 @@ func init() {
 	config.APIPath = "api"
 	config.GroupVersion = &coreV1.SchemeGroupVersion
 	config.NegotiatedSerializer = scheme.Codecs
-	NewKubeClient, err = kubernetes.NewForConfig(config)
+	KubeClient, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 	//fmt.Println(kubeClient)
-	if NewKubeClient == nil {
+	if KubeClient == nil {
 		fmt.Println("未获取到k8s链接")
 	}
 	//list,err:=c.AppsV1().Deployments("default").List(context.Background(),v1.ListOptions{})

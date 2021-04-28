@@ -9,7 +9,7 @@ import (
 )
 
 //全局Oldkubeclient   RestKubeClient
-var KubeClient *kubernetes.Clientset
+var OldKubeClient *kubernetes.Clientset
 
 func init() {
 	sec, err := setting.Cfg.GetSection("kube")
@@ -24,12 +24,12 @@ func init() {
 		Host: kubeHost,
 		//APIPath: "api",
 	}
-	KubeClient, err = kubernetes.NewForConfig(config)
+	OldKubeClient, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 	//fmt.Println(kubeClient)
-	if KubeClient == nil {
+	if OldKubeClient == nil {
 		fmt.Println("未获取到k8s链接")
 	}
 	//list,err:=c.AppsV1().Deployments("default").List(context.Background(),v1.ListOptions{})

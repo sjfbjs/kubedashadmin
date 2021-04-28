@@ -146,6 +146,6 @@ func GetDeploymentsByNS(c *gin.Context) {
 //GetPodByDeployment
 func NewListDeploy(c *gin.Context) {
 	ctx := context.Background()
-	list, _ := config.NewKubeClient.AppsV1().Deployments("default").List(ctx, metav1.ListOptions{})
+	list, _ := config.KubeClient.AppsV1().Deployments("default").List(ctx, metav1.ListOptions{})
 	fmt.Println(list)
 }
