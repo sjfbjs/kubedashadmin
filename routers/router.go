@@ -80,6 +80,7 @@ func InitRouter() *gin.Engine {
 		kube.GET("/pods/:namespace", v1.GetPodsByNS)
 		//获取指定命名空间下的deployment
 		kube.GET("/deployments/:namespace", v1.GetDeploymentsByNS)
+		//kube.GET("/newdeployments/:namespace", v1.NewListDeploy)
 	}
 
 	return r
