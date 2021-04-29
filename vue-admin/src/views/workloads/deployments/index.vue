@@ -71,7 +71,8 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getDeployments('default').then(response => {
+      // 先写死是这个,后面改成动态获取
+      getDeployments('kube-system').then(response => {
         this.list = response.data.lists
         this.listLoading = false
       })
