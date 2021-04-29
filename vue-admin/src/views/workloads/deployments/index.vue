@@ -1,75 +1,81 @@
 <template>
   <div class="app-container">
-    <th>
-      服务名
-    </th>
-    <ol>
-      <li v-for="deployment in deployments">
-        {{ deployment.name }}
-      </li>
-    </ol>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column align="center" label="状态" width="95">
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="名称" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="镜像">
+        <template slot-scope="scope">
+          {{ scope.row.image }}
+        </template>
+      </el-table-column>
+      <el-table-column label="pod副本数" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.poddetail }}
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.Status | statusFilter">{{ scope.row.Status }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="created_at" label="操作" width="300">
+        <template slot-scope="scope">
+          <i class="el-icon-time" />
+          <span>{{ scope.row.DisplayTime }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-export default {
 
+import { getDeployments } from '@/api/workloads'
+
+export default {
+  filters: {
+    statusFilter(Status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[Status]
+    }
+  },
   data() {
     return {
-      filterText: '',
-      data2: [{
-        id: 1,
-        label: 'Level one 1',
-        children: [{
-          id: 4,
-          label: 'Level two 1-1',
-          children: [{
-            id: 9,
-            label: 'Level three 1-1-1'
-          }, {
-            id: 10,
-            label: 'Level three 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: 'Level one 2',
-        children: [{
-          id: 5,
-          label: 'Level two 2-1'
-        }, {
-          id: 6,
-          label: 'Level two 2-2'
-        }]
-      }, {
-        id: 3,
-        label: 'Level one 3',
-        children: [{
-          id: 7,
-          label: 'Level two 3-1'
-        }, {
-          id: 8,
-          label: 'Level two 3-2'
-        }]
-      }],
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      }
+      list: null,
+      listLoading: true
     }
   },
-  watch: {
-    filterText(val) {
-      this.$refs.tree2.filter(val)
-    }
+  created() {
+    this.fetchData()
   },
-
   methods: {
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
+    fetchData() {
+      this.listLoading = true
+      getDeployments('default').then(response => {
+        this.list = response.data.lists
+        this.listLoading = false
+      })
     }
   }
 }
 </script>
-

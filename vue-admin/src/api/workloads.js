@@ -1,9 +1,8 @@
 import request from '@/utils/request'
-export function getDeployments(params) {
-    return request({
-      url: '/kube/deployments',
-      method: 'get',
-      params
-    })
-  }
-  
+
+export function getDeployments(namespace) {
+  return request({
+    url: '/kube/deployments/$namespace',
+    method: 'get'
+  })
+}
