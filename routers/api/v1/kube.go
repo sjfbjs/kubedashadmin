@@ -34,6 +34,7 @@ type MyDeploy struct {
 }
 
 //获取指定命名空间下的pod
+//
 func GetPodsByNS(c *gin.Context) {
 	namespace := c.Param("namespace")
 	//maps := make(map[string]interface{})
@@ -88,6 +89,8 @@ func GetPodsByNS(c *gin.Context) {
 
 }
 
+// todo 新增命名空间获取方法
+// todp pageNation
 func GetDeploymentsByNS(c *gin.Context) {
 	//namespace := c.DefaultQuery("namespace", "default")
 	namespace := c.Param("namespace")
