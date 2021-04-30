@@ -30,6 +30,7 @@ type MyDeploy struct {
 	Name      string           `json:"name"`
 	Image     string           `json:"image"`
 	PodDetail map[string]int32 `json:"poddetail"`
+	Status    string           `json:"status"`
 	//PodList []MyPod `json:"podlist"`
 }
 
@@ -124,6 +125,11 @@ func GetDeploymentsByNS(c *gin.Context) {
 					image := contmap["image"]
 					myDeploy.Image = fmt.Sprintf("%v", image)
 				}
+			}
+			if deploy.Status.UnavailableReplicas > 0 {
+				myDeploy.Status = "unhealth"
+			} else {
+				myDeploy.Status = "health"
 			}
 			podDetailMap := make(map[string]int32)
 			podDetailMap["disiredrs"] = deploy.Status.Replicas

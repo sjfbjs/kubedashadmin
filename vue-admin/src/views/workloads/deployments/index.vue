@@ -26,12 +26,12 @@
       </el-table-column>
       <el-table-column label="pod副本数" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.poddetail }}
+          {{ scope.row.poddetail.currentrs }}/{{ scope.row.poddetail.disiredrs }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="Status" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.Status | statusFilter">{{ scope.row.Status }}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="300">
@@ -50,13 +50,13 @@ import { getDeployments } from '@/api/workloads'
 
 export default {
   filters: {
-    statusFilter(Status) {
+    statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        health: 'success',
+        // true: 'gray',
+        unhealth: 'danger'
       }
-      return statusMap[Status]
+      return statusMap[status]
     }
   },
   data() {
