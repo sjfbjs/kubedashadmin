@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"gin-vue/config"
 	_ "gin-vue/models"
@@ -111,21 +110,7 @@ func GetDeploymentsByNS(c *gin.Context) {
 		for _, deploy := range deployList {
 			myDeploy := MyDeploy{}
 			myDeploy.Name = deploy.Name
-			v := deploy.ObjectMeta.Annotations["kubectl.kubernetes.io/last-applied-configuration"]
-			specinfo := make(map[string]map[string]map[string]interface{})
-			_ = json.Unmarshal([]byte(v), &specinfo)
-			tsv := specinfo["spec"]["template"]["spec"]
-			//镜像获取逻辑可能还是有点问题，可能需要从别的地方获取
-			if tsv != nil {
-				m := tsv.(map[string]interface{})
-				containers := m["containers"]
-				containerfir, ok := containers.([]interface{})
-				if ok {
-					contmap := containerfir[0].(map[string]interface{})
-					image := contmap["image"]
-					myDeploy.Image = fmt.Sprintf("%v", image)
-				}
-			}
+			myDeploy.Image = fmt.Sprintf("%s", deploy.Spec.Template.Spec.Containers[0].Image)
 			if deploy.Status.UnavailableReplicas > 0 {
 				myDeploy.Status = "unhealth"
 			} else {
