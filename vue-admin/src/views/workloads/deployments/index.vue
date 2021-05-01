@@ -47,6 +47,7 @@
 <script>
 
 import { getDeployments } from '@/api/workloads'
+import {getNameSpaces} from "../../../api/workloads";
 
 export default {
   filters: {
@@ -62,6 +63,7 @@ export default {
   data() {
     return {
       list: null,
+      namespacelist: null,
       listLoading: true
     }
   },
@@ -75,6 +77,9 @@ export default {
       getDeployments('kube-system').then(response => {
         this.list = response.data.lists
         this.listLoading = false
+      })
+      getNameSpaces().then(response => {
+        this.namespacelist = response.data.lists
       })
     }
   }

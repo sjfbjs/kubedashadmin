@@ -6,3 +6,10 @@ export function getDeployments(namespace) {
     method: 'get'
   })
 }
+
+export function getNameSpaces() {
+  return request({
+    url: '/kube/namespaces',
+    method: 'get'
+  })
+}
