@@ -47,7 +47,7 @@
 <script>
 
 import { getDeployments } from '@/api/workloads'
-import {getNameSpaces} from "../../../api/workloads";
+import { getNameSpaces } from '../../../api/workloads'
 
 export default {
   filters: {
