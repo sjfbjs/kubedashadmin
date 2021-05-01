@@ -90,7 +90,7 @@ export const constantRoutes = [
     name: 'Workloads',
     meta: {
       title: '工作负载',
-      icon: 'tree'
+      icon: 'component'
     },
     children: [
       {

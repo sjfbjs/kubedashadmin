@@ -1,5 +1,17 @@
 <template>
   <div class="app-container">
+    <el-select
+      v-model="namespacelist"
+      filterable
+    >
+      <el-option
+        v-for="item in namespacelist"
+        :key="item.name"
+        :label="item.name"
+        :value="item.name"
+      >
+      </el-option>
+    </el-select>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -46,10 +58,10 @@
 
 <script>
 
-import { getDeployments } from '@/api/workloads'
-import { getNameSpaces } from '../../../api/workloads'
+  import {getDeployments} from '@/api/workloads'
+  import {getNameSpaces} from '../../../api/workloads'
 
-export default {
+  export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -63,8 +75,10 @@ export default {
   data() {
     return {
       list: null,
+      //这个是进入就请求服务器获取的
       namespacelist: null,
-      listLoading: true
+      listLoading: true,
+      namespace: "default"
     }
   },
   created() {
@@ -74,7 +88,7 @@ export default {
     fetchData() {
       this.listLoading = true
       // 先写死是这个,后面改成动态获取
-      getDeployments('kube-system').then(response => {
+      getDeployments(this.namespace).then(response => {
         this.list = response.data.lists
         this.listLoading = false
       })
