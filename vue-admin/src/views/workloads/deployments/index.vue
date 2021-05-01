@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-select
       v-model="namespacelist"
-      filterable
+      filterable @change="fetchData"
     >
       <el-option
         v-for="item in namespacelist"
@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="操作" width="300">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
+          <i class="el-icon-time"/>
           <span>{{ scope.row.DisplayTime }}</span>
         </template>
       </el-table-column>
@@ -62,30 +62,34 @@
   import {getNameSpaces} from '../../../api/workloads'
 
   export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        health: 'success',
-        // true: 'gray',
-        unhealth: 'danger'
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          health: 'success',
+          // true: 'gray',
+          unhealth: 'danger'
+        }
+        return statusMap[status]
       }
-      return statusMap[status]
-    }
-  },
-  data() {
-    return {
-      list: null,
-      //这个是进入就请求服务器获取的
-      namespacelist: null,
-      listLoading: true,
-      namespace: "default"
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
+    },
+    data() {
+      return {
+        list: null,
+        //这个是进入就请求服务器获取的, option 选择了也要刷新namespaceList
+        namespacelist: "",
+        listLoading: true,
+        namespace: "default"
+      }
+    },
+    created() {
+      this.fetchData()
+    },
+    watch: {
+      // 如果路由有变化，会再次执行该方法
+      '$route': 'fetchData'
+    },
+    methods: {
+      fetchData() {
       this.listLoading = true
       // 先写死是这个,后面改成动态获取
       getDeployments(this.namespace).then(response => {
@@ -93,7 +97,7 @@
         this.listLoading = false
       })
       getNameSpaces().then(response => {
-        this.namespacelist = response.data.lists
+          this.namespacelist = response.data.lists
       })
     }
   }
