@@ -32,6 +32,9 @@ type MyDeploy struct {
 	Status    string           `json:"status"`
 	//PodList []MyPod `json:"podlist"`
 }
+type MyNameSpace struct {
+	Name string `json:"name"`
+}
 
 //获取指定命名空间下的pod
 //
@@ -139,8 +142,27 @@ func GetDeploymentsByNS(c *gin.Context) {
 }
 
 //GetPodByDeployment
-func NewListDeploy(c *gin.Context) {
+//noinspection ALL
+func GetNameSpace(c *gin.Context) {
+	var code int
 	ctx := context.Background()
-	list, _ := config.KubeClient.AppsV1().Deployments("default").List(ctx, metav1.ListOptions{})
-	fmt.Println(list)
+	data := make(map[string]interface{})
+	list, err := config.KubeClient.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
+	if err != nil {
+		code = e.ERROR
+	} else {
+		code = e.SUCCESS
+	}
+	nameSpaceList := []MyNameSpace{}
+	for _, namespace := range list.Items {
+		mynamespace := MyNameSpace{}
+		mynamespace.Name = namespace.Name
+		nameSpaceList = append(nameSpaceList, mynamespace)
+	}
+	data["lists"] = nameSpaceList
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": data,
+	})
 }
