@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-select
       v-model="namespacelist"
-      filterable @change="fetchData"
+      filterable @change="refreshData(item.name)"
     >
       <el-option
         v-for="item in namespacelist"
@@ -78,7 +78,8 @@
         //这个是进入就请求服务器获取的, option 选择了也要刷新namespaceList
         namespacelist: "",
         listLoading: true,
-        namespace: "default"
+        namespace: "default",
+        select:'default'
       }
     },
     created() {
@@ -90,16 +91,23 @@
     },
     methods: {
       fetchData() {
-      this.listLoading = true
-      // 先写死是这个,后面改成动态获取
-      getDeployments(this.namespace).then(response => {
-        this.list = response.data.lists
-        this.listLoading = false
-      })
-      getNameSpaces().then(response => {
+        this.listLoading = true
+        // 先写死是这个,后面改成动态获取
+        getDeployments(this.namespace).then(response => {
+          this.list = response.data.lists
+          this.listLoading = false
+        })
+        getNameSpaces().then(response => {
           this.namespacelist = response.data.lists
-      })
+        })
+      },
+      refreshData(namespace) {
+        this.listLoading = true
+        getDeployments(namespace).then(response => {
+          this.list = response.data.lists
+          this.listLoading = false
+        })
+      }
     }
   }
-}
 </script>
