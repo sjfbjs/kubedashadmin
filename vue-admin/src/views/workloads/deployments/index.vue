@@ -2,6 +2,7 @@
   <div class="app-container">
     <el-select
       v-model="namespaceList"
+<!--      这边准备做滚动-->
       filterable @change="refreshData(item.name)"
     >
       <el-option
