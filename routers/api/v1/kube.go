@@ -158,8 +158,26 @@ func GetNameSpace(c *gin.Context) {
 	})
 }
 
-func getPodDetail(c *gin.Context) {
+func GetPodDetail(c *gin.Context) {
+	var code int
 	namespace := c.Param("namespace")
-	podName := c.Param("pod")
-	fmt.Println(namespace, podName)
+	deployName := c.Param("deployment")
+	fmt.Println(namespace, deployName)
+	//list,err := config.KubeClient.CoreV1().Pods(namespace).Get(c,podName,metav1.GetOptions{})
+	deployInfo, err := config.KubeClient.AppsV1().Deployments(namespace).Get(c, deployName, metav1.GetOptions{})
+	if err != nil {
+		fmt.Println(err.Error())
+		code = e.ERROR
+	} else {
+		code = e.SUCCESS
+	}
+
+	fmt.Println(deployInfo)
+	data := make(map[string]interface{})
+	data["deploydetails"] = deployInfo
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+		"msg":  e.GetMsg(code),
+		"data": data,
+	})
 }
