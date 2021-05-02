@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-select
-      v-model="namespacelist"
+      v-model="namespaceList"
       filterable @change="refreshData(item.name)"
     >
       <el-option
-        v-for="item in namespacelist"
+        v-for="item in namespaceList"
         :key="item.name"
         :label="item.name"
         :value="item.name"
@@ -76,7 +76,7 @@
       return {
         list: null,
         //这个是进入就请求服务器获取的, option 选择了也要刷新namespaceList
-        namespacelist: "",
+        namespaceList: "",
         listLoading: true,
         namespace: "default",
         select:'default'
@@ -98,7 +98,7 @@
           this.listLoading = false
         })
         getNameSpaces().then(response => {
-          this.namespacelist = response.data.lists
+          this.namespaceList = response.data.lists
         })
       },
       refreshData(namespace) {
