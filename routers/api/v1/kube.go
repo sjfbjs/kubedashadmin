@@ -32,9 +32,6 @@ type MyDeploy struct {
 	Status    string           `json:"status"`
 	//PodList []MyPod `json:"podlist"`
 }
-type MyNameSpace struct {
-	Name string `json:"name"`
-}
 
 //获取指定命名空间下的pod
 //
@@ -155,9 +152,7 @@ func GetNameSpace(c *gin.Context) {
 	}
 	nameSpaceList := []MyNameSpace{}
 	for _, namespace := range list.Items {
-		mynamespace := MyNameSpace{}
-		mynamespace.Name = namespace.Name
-		nameSpaceList = append(nameSpaceList, mynamespace)
+		nameSpaceList = append(nameSpaceList, namespace.Name)
 	}
 	data["lists"] = nameSpaceList
 	c.JSON(http.StatusOK, gin.H{
