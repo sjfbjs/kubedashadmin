@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"context"
 	"fmt"
 	"gin-vue/config"
 	_ "gin-vue/models"
@@ -40,8 +39,7 @@ func GetPodsByNS(c *gin.Context) {
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
 	code := e.SUCCESS
-	ctx := context.Background()
-	list, err := config.KubeClient.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{})
+	list, err := config.KubeClient.CoreV1().Pods(namespace).List(c, metav1.ListOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
 		code = e.ERROR
@@ -97,8 +95,7 @@ func GetDeploymentsByNS(c *gin.Context) {
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
 	code := e.SUCCESS
-	ctx := context.Background()
-	list, err := config.KubeClient.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
+	list, err := config.KubeClient.AppsV1().Deployments(namespace).List(c, metav1.ListOptions{})
 	if err != nil {
 		fmt.Println(err.Error())
 		code = e.ERROR
@@ -142,9 +139,8 @@ func GetDeploymentsByNS(c *gin.Context) {
 //noinspection ALL
 func GetNameSpace(c *gin.Context) {
 	var code int
-	ctx := context.Background()
 	data := make(map[string]interface{})
-	list, err := config.KubeClient.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
+	list, err := config.KubeClient.CoreV1().Namespaces().List(c, metav1.ListOptions{})
 	if err != nil {
 		code = e.ERROR
 	} else {
@@ -160,4 +156,10 @@ func GetNameSpace(c *gin.Context) {
 		"msg":  e.GetMsg(code),
 		"data": data,
 	})
+}
+
+func getPodDetail(c *gin.Context) {
+	namespace := c.Param("namespace")
+	podName := c.Param("pod")
+	fmt.Println(namespace, podName)
 }
