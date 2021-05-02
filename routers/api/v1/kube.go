@@ -150,7 +150,7 @@ func GetNameSpace(c *gin.Context) {
 	} else {
 		code = e.SUCCESS
 	}
-	nameSpaceList := []MyNameSpace{}
+	var nameSpaceList []string
 	for _, namespace := range list.Items {
 		nameSpaceList = append(nameSpaceList, namespace.Name)
 	}

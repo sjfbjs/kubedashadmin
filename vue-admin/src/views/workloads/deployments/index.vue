@@ -2,13 +2,14 @@
   <div class="app-container">
     <el-select
       v-model="namespaceList"
-      filterable @change="refreshData(item.name)"
+      filterable @change="refreshData"
+      clearable
     >
       <el-option
         v-for="item in namespaceList"
-        :key="item.name"
-        :label="item.name"
-        :value="item.name"
+        :key="item.index"
+        :label="item.index"
+        :value="item"
       >
       </el-option>
     </el-select>
@@ -101,9 +102,14 @@
           this.namespaceList = response.data.lists
         })
       },
-      refreshData(namespace) {
+      refreshData(val) {
+        this.$forceUpdate
+        getNameSpaces().then(response => {
+          this.namespaceList = response.data.lists
+        })
+        console.log("namespaceList:" + this.namespaceList)       
         this.listLoading = true
-        getDeployments(namespace).then(response => {
+        getDeployments(val).then(response => {
           this.list = response.data.lists
           this.listLoading = false
         })
