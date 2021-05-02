@@ -1,14 +1,13 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"gin-vue/middleware/cors"
 	"gin-vue/middleware/myjwt"
 	"gin-vue/pkg/e"
 	"gin-vue/pkg/setting"
 	v1 "gin-vue/routers/api/v1"
 	v2 "gin-vue/routers/api/v2"
+	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
