@@ -72,7 +72,7 @@ func InitRouter() *gin.Engine {
 		//获取文章列表
 		apiv2.GET("/articles", v2.GetArticles)
 	}
-	//这边是 http路由示例
+	//这边是 http路由示例。
 	kube := r.Group("/kube")
 	{
 		//获取指定命名空间下的pod
