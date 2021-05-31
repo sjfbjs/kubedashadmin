@@ -9,6 +9,7 @@ import (
 	_ "gin-vue/pkg/util"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net/http"
@@ -36,9 +37,15 @@ type MyDeploy struct {
 //获取指定命名空间下的pod
 //
 func GetPodsByNS(c *gin.Context) {
-	logger, _ := zap.NewProduction()
-	defer logger.Sync() // 将 buffer 中的日志写到文件中
-	logger.Info("this is a test log")
+	//logger, _ := zap.NewProduction()
+	//defer logger.Sync() // 将 buffer 中的日志写到文件中
+	//logger.Info("this is a test log")
+	logger, _ := zap.Config{
+		Encoding:    "json",                                   // 配置编码方式（json 或 console）
+		Level:       zap.NewAtomicLevelAt(zapcore.DebugLevel), // 输出级别
+		OutputPaths: []string{"stdout"},                       // 输出目的地
+	}.Build()
+	logger.Sugar().Infow("test", "name", "xxx", "sd", "xxx") // 也只打印 {"name": "xxx"}
 	namespace := c.Param("namespace")
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
