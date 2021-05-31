@@ -8,6 +8,7 @@ import (
 	_ "gin-vue/pkg/setting"
 	_ "gin-vue/pkg/util"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"net/http"
@@ -35,6 +36,9 @@ type MyDeploy struct {
 //获取指定命名空间下的pod
 //
 func GetPodsByNS(c *gin.Context) {
+	logger, _ := zap.NewProduction()
+	defer logger.Sync() // 将 buffer 中的日志写到文件中
+	logger.Info("this is a test log")
 	namespace := c.Param("namespace")
 	//maps := make(map[string]interface{})
 	data := make(map[string]interface{})
