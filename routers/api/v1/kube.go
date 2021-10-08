@@ -177,7 +177,7 @@ func GetPodDetail(c *gin.Context) {
 		code = e.SUCCESS
 	}
 
-	fmt.Println(selector.String())
+	//fmt.Println(selector.String())
 	listOpts := metav1.ListOptions{
 		LabelSelector: selector.String(),
 	}
@@ -186,14 +186,13 @@ func GetPodDetail(c *gin.Context) {
 	data := make(map[string]interface{})
 	//podList := make(map[string]interface{})
 	//这个是知道只会找到一个
-	rsName := rs.Items[0].Name
-	fmt.Println(rsName)
+	podSelector, _ := metav1.LabelSelectorAsSelector(rs.Items[0].Spec.Selector)
 	//for  _, item := range rs.Items {
 	//	//rsName = item.Name
 	//	fmt.Println(item.Name)
 	//}
 	//根据rs获取pod详情
-	listPodsOpts := metav1.ListOptions{}
+	listPodsOpts := metav1.ListOptions{LabelSelector: podSelector.String()}
 	pods, _ := config.KubeClient.CoreV1().Pods(namespace).List(c, listPodsOpts)
 
 	//podList := make(map[string]interface{})
