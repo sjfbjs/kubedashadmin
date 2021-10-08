@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"log"
 	"net/http"
 )
 
@@ -164,17 +165,34 @@ func GetPodDetail(c *gin.Context) {
 	deployName := c.Param("deployment")
 	fmt.Println(namespace, deployName)
 	//list,err := config.KubeClient.CoreV1().Pods(namespace).Get(c,podName,metav1.GetOptions{})
-	deployInfo, err := config.KubeClient.AppsV1().Deployments(namespace).Get(c, deployName, metav1.GetOptions{})
+	deployInfo, _ := config.KubeClient.AppsV1().Deployments(namespace).Get(c, deployName, metav1.GetOptions{})
+	//noinspection GoNilness
+	selector, err := metav1.LabelSelectorAsSelector(deployInfo.Spec.Selector)
+
 	if err != nil {
 		fmt.Println(err.Error())
 		code = e.ERROR
+		log.Fatal(err)
 	} else {
 		code = e.SUCCESS
 	}
 
-	fmt.Println(deployInfo)
+	fmt.Println(selector.String())
+	listOpts := metav1.ListOptions{
+		LabelSelector: selector.String(),
+	}
+	rs, _ := config.KubeClient.AppsV1().ReplicaSets(namespace).List(c, listOpts)
+
 	data := make(map[string]interface{})
-	data["deploydetails"] = deployInfo
+	//podList := make(map[string]interface{})
+	//for  _, item := range rs.Items {
+	//
+	//	fmt.Println(item.Name)
+	//}
+	//根据rs获取pod详情
+
+	//podList := make(map[string]interface{})
+	data["deploydetails"] = rs
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
