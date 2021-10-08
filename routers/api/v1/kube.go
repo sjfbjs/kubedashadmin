@@ -185,14 +185,19 @@ func GetPodDetail(c *gin.Context) {
 
 	data := make(map[string]interface{})
 	//podList := make(map[string]interface{})
+	//这个是知道只会找到一个
+	rsName := rs.Items[0].Name
+	fmt.Println(rsName)
 	//for  _, item := range rs.Items {
-	//
+	//	//rsName = item.Name
 	//	fmt.Println(item.Name)
 	//}
 	//根据rs获取pod详情
+	listPodsOpts := metav1.ListOptions{}
+	pods, _ := config.KubeClient.CoreV1().Pods(namespace).List(c, listPodsOpts)
 
 	//podList := make(map[string]interface{})
-	data["deploydetails"] = rs
+	data["deploydetails"] = pods
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  e.GetMsg(code),
