@@ -2,15 +2,22 @@ package config
 
 import (
 	"fmt"
-	coreV1 "k8s.io/api/core/v1"
+	"io/ioutil"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"log"
 )
 
 //全局kubeclient
 var KubeClient *kubernetes.Clientset
+
+//var (
+var (
+	kubeconfig []byte
+	restConf   *rest.Config
+	err        error
+)
 
 //noinspection ALL
 func init() {
@@ -31,12 +38,21 @@ func init() {
 	 **/
 
 	configPath := "conf/kube.conf"
+	// 读kubeconfig文件
+	if kubeconfig, err = ioutil.ReadFile(configPath); err != nil {
+		log.Fatal(err)
+	}
+	// 生成rest client配置
+	if restConf, err = clientcmd.RESTConfigFromKubeConfig(kubeconfig); err != nil {
+		log.Fatal(err)
+	}
+
 	//k8s地址
-	config, err := clientcmd.BuildConfigFromFlags("", configPath)
-	config.APIPath = "api"
-	config.GroupVersion = &coreV1.SchemeGroupVersion
-	config.NegotiatedSerializer = scheme.Codecs
-	KubeClient, err = kubernetes.NewForConfig(config)
+	//config, err := clientcmd.BuildConfigFromFlags("", configPath)
+	//config.APIPath = "api"
+	//config.GroupVersion = &coreV1.SchemeGroupVersion
+	//config.NegotiatedSerializer = scheme.Codecs
+	KubeClient, err = kubernetes.NewForConfig(restConf)
 	if err != nil {
 		log.Fatal(err)
 	}
